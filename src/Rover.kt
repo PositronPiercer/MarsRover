@@ -1,5 +1,8 @@
+import java.lang.IllegalStateException
+
 class Rover(
-    initialPosition: Position
+    initialPosition: Position,
+    val surface: Surface
     ) {
     private val _position : Position = initialPosition
     val position : Position
@@ -12,11 +15,17 @@ class Rover(
         _position.orientation = _position.orientation.right()
     }
     private fun moveForward(){
-        _position.location = when(_position.orientation){
-            Orientation.N -> Location(_position.location.x, _position.location.y + 1)
-            Orientation.S -> Location(_position.location.x, _position.location.y - 1)
-            Orientation.E -> Location(_position.location.x + 1, _position.location.y)
-            Orientation.W -> Location(_position.location.x - 1, _position.location.y)
+        val newLocation = when(_position.orientation){
+            Orientation.N -> Coordinates(_position.location.x, _position.location.y + 1)
+            Orientation.S -> Coordinates(_position.location.x, _position.location.y - 1)
+            Orientation.E -> Coordinates(_position.location.x + 1, _position.location.y)
+            Orientation.W -> Coordinates(_position.location.x - 1, _position.location.y)
+        }
+        _position.location = if (surface.inBounds(newLocation)){
+            newLocation
+        }
+        else{
+            throw IllegalStateException("Rover location out of bounds")
         }
     }
     fun move(commands : String){
@@ -32,7 +41,7 @@ class Rover(
 
     companion object{
         data class Position(
-            var location: Location,
+            var location: Coordinates,
             var orientation: Orientation
         )
     }
