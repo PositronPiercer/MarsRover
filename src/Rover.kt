@@ -10,12 +10,14 @@ class Rover(
 
     private fun rotateLeft(){
         _position.orientation = _position.orientation.left()
+        //TODO position.left
     }
     private fun rotateRight(){
         _position.orientation = _position.orientation.right()
     }
     private fun moveForward(){
         val newLocation = when(_position.orientation){
+            //TODO coordiates = coordinate.left
             Orientation.N -> Coordinates(_position.location.x, _position.location.y + 1)
             Orientation.S -> Coordinates(_position.location.x, _position.location.y - 1)
             Orientation.E -> Coordinates(_position.location.x + 1, _position.location.y)
@@ -29,6 +31,7 @@ class Rover(
         }
     }
     fun move(commands : String){
+        //TODO indentation
         for (command : Char in commands){
             when(command){
                 'L' -> rotateLeft()
