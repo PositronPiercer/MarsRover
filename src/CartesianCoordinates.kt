@@ -3,7 +3,7 @@ import java.lang.IllegalStateException
 
 class CartesianCoordinates(
     private val dimension : Int,
-    private var coordinates: MutableList<Int>
+    private var coordinates: List<Int>
 ) : Coordinates() {
     init {
         if (coordinates.size > dimension){
@@ -18,31 +18,31 @@ class CartesianCoordinates(
         return when(direction){
             Orientation.N -> CartesianCoordinates(
                 dimension = dimension,
-                coordinates = (mutableListOf(
+                coordinates = listOf(
                     coordinates[0],
                     coordinates[1] + distance
-                ) + coordinates.drop(2)).toMutableList()
+                ) + coordinates.drop(2)
             )
             Orientation.S -> CartesianCoordinates(
                 dimension = dimension,
-                coordinates = (mutableListOf(
+                coordinates = listOf(
                     coordinates[0],
                     coordinates[1] - distance
-                ) + coordinates.drop(2)).toMutableList()
+                ) + coordinates.drop(2)
             )
             Orientation.E -> CartesianCoordinates(
                 dimension = dimension,
-                coordinates = (mutableListOf(
+                coordinates = listOf(
                     coordinates[0] + distance,
                     coordinates[1]
-                ) + coordinates.drop(2)).toMutableList()
+                ) + coordinates.drop(2)
             )
             Orientation.W -> CartesianCoordinates(
                 dimension = dimension,
-                coordinates = (mutableListOf(
+                coordinates = listOf(
                     coordinates[0] - distance,
                     coordinates[1]
-                ) + coordinates.drop(2)).toMutableList()
+                ) + coordinates.drop(2)
             )
         }
     }
