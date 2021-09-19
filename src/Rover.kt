@@ -1,34 +1,37 @@
+import interfaces.CoordinatesReporter
+import interfaces.RoverPositionReporter
 import java.lang.IllegalStateException
 
 class Rover(
-    initialPosition: Position,
-    val surface: Surface
+    private var location : Coordinates,
+    private var orientation: Orientation,
+    private var surface: Surface
     ) {
-    private val _position : Position = initialPosition
-    val position : Position
-        get() = _position
-
     private fun rotateLeft(){
-        _position.orientation = _position.orientation.left()
-        //TODO position.left
+        orientation = orientation.left()
     }
     private fun rotateRight(){
-        _position.orientation = _position.orientation.right()
+        orientation = orientation.right()
     }
     private fun moveForward(){
-        val newLocation = when(_position.orientation){
-            //TODO coordiates = coordinate.left
-            Orientation.N -> Coordinates(_position.location.x, _position.location.y + 1)
-            Orientation.S -> Coordinates(_position.location.x, _position.location.y - 1)
-            Orientation.E -> Coordinates(_position.location.x + 1, _position.location.y)
-            Orientation.W -> Coordinates(_position.location.x - 1, _position.location.y)
-        }
-        _position.location = if (surface.inBounds(newLocation)){
+        val newLocation = location.atDelta(
+            distance = 1,
+            direction = orientation
+        )
+        location = if (surface.inBounds(newLocation)){
             newLocation
         }
         else{
             throw IllegalStateException("Rover location out of bounds")
         }
+    }
+    fun reportPosition(roverPositionReporter: RoverPositionReporter){
+        val coordinatesReporter = object : CoordinatesReporter {
+            override fun reportCartesian2d(x: Int, y: Int) {
+                roverPositionReporter.report(x, y, orientation)
+            }
+        }
+        location.report(coordinatesReporter)
     }
     fun move(commands : String){
         //TODO indentation
@@ -40,12 +43,5 @@ class Rover(
                 else -> throw IllegalArgumentException("Unknown Command")
             }
         }
-    }
-
-    companion object{
-        data class Position(
-            var location: Coordinates,
-            var orientation: Orientation
-        )
     }
 }
