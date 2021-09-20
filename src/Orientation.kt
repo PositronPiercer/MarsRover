@@ -1,14 +1,17 @@
+import java.lang.IllegalArgumentException
+
 enum class Orientation {
     N, E, S, W;
     companion object {
+        private val char2OrientationMap = mapOf(
+            'N' to N,
+            'S' to S,
+            'E' to E,
+            'W' to W
+        )
         fun fromChar(orientation: Char) : Orientation{
-            return when(orientation){
-                'N' -> N
-                'S' -> S
-                'E' -> E
-                'W' -> W
-                else -> throw IllegalArgumentException("Unknown Orientation")
-            }
+            return char2OrientationMap[orientation] ?:
+            throw IllegalArgumentException("Unknown Orientation")
         }
     }
     fun left() : Orientation = values()[((this.ordinal - 1) + 4) % 4]

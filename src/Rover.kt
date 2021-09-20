@@ -1,5 +1,6 @@
 import interfaces.CoordinatesReporter
 import interfaces.RoverPositionReporter
+import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 
 class Rover(
@@ -7,6 +8,11 @@ class Rover(
     private var orientation: Orientation,
     private var surface: Surface
     ) {
+    private val roverCommands = mapOf(
+        'L' to { rotateLeft() },
+        'R' to { rotateRight() },
+        'M' to { moveForward() }
+    )
     private fun rotateLeft(){
         orientation = orientation.left()
     }
@@ -19,6 +25,7 @@ class Rover(
             direction = orientation
         )
         location = if (surface.inBounds(newLocation)){
+            //TODO remove conditional
             newLocation
         }
         else{
@@ -35,16 +42,13 @@ class Rover(
         location.report(coordinatesReporter)
     }
     private fun execute(command : Char){
-        //TODO add new commands in future
-        when(command){
-            'L' -> rotateLeft()
-            'R' -> rotateRight()
-            'M' -> moveForward()
-            else -> throw IllegalArgumentException("Unknown Command")
+        roverCommands[command]?.let {
+            it()
+        }?: run{
+            throw IllegalArgumentException("Unknown Command")
         }
     }
     fun move(commands : String){
-        //TODO indentation
         for (command : Char in commands){
             execute(command)
         }
