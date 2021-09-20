@@ -9,6 +9,7 @@ class Plateau(
         var y_ = 0
         val coordinatesReporter = object : CoordinatesReporter{
             override fun reportCartesian2d(x: Int, y: Int) {
+                //TODO Is this the right way?
                 x_ = x
                 y_ = y
             }

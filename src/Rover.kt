@@ -22,7 +22,8 @@ class Rover(
             newLocation
         }
         else{
-            throw IllegalStateException("Rover location out of bounds")
+            //TODO this check should be done by the plateau
+            throw IllegalStateException("Rover location out of surface")
         }
     }
     fun reportPosition(roverPositionReporter: RoverPositionReporter){
@@ -33,15 +34,19 @@ class Rover(
         }
         location.report(coordinatesReporter)
     }
+    private fun execute(command : Char){
+        //TODO add new commands in future
+        when(command){
+            'L' -> rotateLeft()
+            'R' -> rotateRight()
+            'M' -> moveForward()
+            else -> throw IllegalArgumentException("Unknown Command")
+        }
+    }
     fun move(commands : String){
         //TODO indentation
         for (command : Char in commands){
-            when(command){
-                'L' -> rotateLeft()
-                'R' -> rotateRight()
-                'M' -> moveForward()
-                else -> throw IllegalArgumentException("Unknown Command")
-            }
+            execute(command)
         }
     }
 }
