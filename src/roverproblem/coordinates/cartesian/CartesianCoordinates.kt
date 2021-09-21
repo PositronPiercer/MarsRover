@@ -3,6 +3,7 @@ package roverproblem.coordinates.cartesian
 import roverproblem.Orientation
 import roverproblem.coordinates.Coordinates
 import roverproblem.coordinates.interfaces.CoordinatesReporter
+import roverproblem.interfaces.CartesianVectorReporter
 
 class CartesianCoordinates(
     private val coordinates: List<Int>
@@ -12,32 +13,20 @@ class CartesianCoordinates(
         coordinatesReporter.reportCartesian2d(coordinates[0], coordinates[1])
     }
     private fun getDelta(distance: Int, direction: Orientation) : CartesianCoordinates {
-        return when(direction){
-            Orientation.N -> CartesianCoordinates(
-                coordinates = listOf(
-                    0,
-                    distance
-                ) + List(dimension - 2){0}
-            )
-            Orientation.S -> CartesianCoordinates(
-                coordinates = listOf(
-                    0,
-                    -distance
-                ) + List(dimension - 2){0}
-            )
-            Orientation.E -> CartesianCoordinates(
-                coordinates = listOf(
-                    distance,
-                    0
-                ) + List(dimension - 2){0}
-            )
-            Orientation.W -> CartesianCoordinates(
-                coordinates = listOf(
-                    -distance,
-                    0
-                ) + List(dimension - 2){0}
-            )
+        val unitVector = direction.cartesianUnitVector
+        lateinit var unitVectorPoints : List<Int>
+        unitVector.report(object : CartesianVectorReporter{
+            override fun report(vectorPoints: List<Int>) {
+                unitVectorPoints = vectorPoints
+            }
+        })
+        val unitVectorDimension = unitVectorPoints.size
+        val delta = unitVectorPoints.map { unitVectorPoint ->
+            distance * unitVectorPoint
         }
+        return CartesianCoordinates(
+            coordinates = delta + List(dimension - unitVectorDimension){0}
+        )
     }
 
     override fun atDelta(distance: Int, direction: Orientation) : CartesianCoordinates {

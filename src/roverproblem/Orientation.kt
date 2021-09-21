@@ -3,7 +3,26 @@ package roverproblem
 import java.lang.IllegalArgumentException
 
 enum class Orientation {
-    N, E, S, W;
+    N{
+     override val cartesianUnitVector = CartesianVector(listOf(
+         0, 1
+     ))
+     },
+    E{
+        override val cartesianUnitVector = CartesianVector(listOf(
+            1, 0
+        ))
+     },
+    S{
+        override val cartesianUnitVector = CartesianVector(listOf(
+            0, -1
+        ))
+     },
+    W{
+        override val cartesianUnitVector = CartesianVector(listOf(
+            -1, 0
+        ))
+    };
     companion object {
         private val char2OrientationMap = mapOf(
             'N' to N,
@@ -13,9 +32,10 @@ enum class Orientation {
         )
         fun fromChar(orientation: Char) : Orientation {
             return char2OrientationMap[orientation] ?:
-            throw IllegalArgumentException("Unknown roverproblem.Orientation")
+            throw IllegalArgumentException("Unknown Orientation")
         }
     }
+    abstract val cartesianUnitVector : CartesianVector
     fun left() : Orientation = values()[((this.ordinal - 1) + 4) % 4]
     fun right() : Orientation = values()[((this.ordinal + 1) + 4) % 4]
 }
