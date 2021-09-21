@@ -1,4 +1,8 @@
-import interfaces.CoordinatesReporter
+package roverproblem.coordinates
+
+import roverproblem.coordinates.cartesian.CartesianCoordinates
+import roverproblem.Orientation
+import roverproblem.coordinates.interfaces.CoordinatesReporter
 
 abstract class Coordinates() {
     companion object{

@@ -1,3 +1,5 @@
+package roverproblem
+
 import java.lang.IllegalArgumentException
 
 enum class Orientation {
@@ -9,9 +11,9 @@ enum class Orientation {
             'E' to E,
             'W' to W
         )
-        fun fromChar(orientation: Char) : Orientation{
+        fun fromChar(orientation: Char) : Orientation {
             return char2OrientationMap[orientation] ?:
-            throw IllegalArgumentException("Unknown Orientation")
+            throw IllegalArgumentException("Unknown roverproblem.Orientation")
         }
     }
     fun left() : Orientation = values()[((this.ordinal - 1) + 4) % 4]

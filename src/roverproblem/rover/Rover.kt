@@ -1,13 +1,17 @@
-import interfaces.CoordinatesReporter
-import interfaces.RoverPositionReporter
+package roverproblem.rover
+
+import roverproblem.coordinates.Coordinates
+import roverproblem.Orientation
+import roverproblem.surface.SurfaceLocation
+import roverproblem.coordinates.interfaces.CoordinatesReporter
+import roverproblem.rover.interfaces.RoverPositionReporter
+import roverproblem.surface.interfaces.SurfaceLocationReporter
 import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 
 class Rover(
-    private var location : Coordinates,
-    private var orientation: Orientation,
-    private var surface: Surface
-    ) {
+    private var location: SurfaceLocation,
+    private var orientation: Orientation
+) {
     private val roverCommands = mapOf(
         'L' to { rotateLeft() },
         'R' to { rotateRight() },
@@ -20,18 +24,10 @@ class Rover(
         orientation = orientation.right()
     }
     private fun moveForward(){
-        val newLocation = location.atDelta(
+        location = location.atDelta(
             distance = 1,
             direction = orientation
         )
-        location = if (surface.inBounds(newLocation)){
-            //TODO remove conditional
-            newLocation
-        }
-        else{
-            //TODO this check should be done by the plateau
-            throw IllegalStateException("Rover location out of surface")
-        }
     }
     fun reportPosition(roverPositionReporter: RoverPositionReporter){
         val coordinatesReporter = object : CoordinatesReporter {
@@ -39,7 +35,12 @@ class Rover(
                 roverPositionReporter.report(x, y, orientation)
             }
         }
-        location.report(coordinatesReporter)
+        val surfaceLocationReporter = object : SurfaceLocationReporter {
+            override fun report(coordinates: Coordinates) {
+                coordinates.report(coordinatesReporter)
+            }
+        }
+        location.report(surfaceLocationReporter)
     }
     private fun execute(command : Char){
         roverCommands[command]?.let {

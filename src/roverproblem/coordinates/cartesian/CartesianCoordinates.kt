@@ -1,5 +1,8 @@
-import interfaces.CoordinatesReporter
-import java.lang.IllegalStateException
+package roverproblem.coordinates.cartesian
+
+import roverproblem.Orientation
+import roverproblem.coordinates.Coordinates
+import roverproblem.coordinates.interfaces.CoordinatesReporter
 
 class CartesianCoordinates(
     private val coordinates: List<Int>
@@ -8,7 +11,7 @@ class CartesianCoordinates(
     fun reportCartesian2d(coordinatesReporter: CoordinatesReporter){
         coordinatesReporter.reportCartesian2d(coordinates[0], coordinates[1])
     }
-    private fun getDelta(distance: Int, direction: Orientation) : CartesianCoordinates{
+    private fun getDelta(distance: Int, direction: Orientation) : CartesianCoordinates {
         return when(direction){
             Orientation.N -> CartesianCoordinates(
                 coordinates = listOf(
@@ -45,7 +48,7 @@ class CartesianCoordinates(
     fun add(delta: CartesianCoordinates): CartesianCoordinates {
         val newCoordinatesList = mutableListOf<Int>()
         lateinit var deltaCoordinates : List<Int>
-        val coordinatesReporter = object : CoordinatesReporter{
+        val coordinatesReporter = object : CoordinatesReporter {
             override fun reportCartesian(coordinates: List<Int>) {
                 deltaCoordinates = coordinates
             }

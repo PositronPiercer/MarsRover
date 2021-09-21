@@ -1,4 +1,4 @@
-package interfaces
+package roverproblem.coordinates.interfaces
 
 interface CoordinatesReporter {
     fun reportCartesian2d(x : Int, y : Int){}
